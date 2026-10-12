@@ -32,3 +32,9 @@ V3 - NOTUN FEATURE
 - Settings-e notun field: Office open/close hour, Auto reply, Quick replies.
 - firestore.rules + firebase/data.js abar update korun.
 - Ei version-e nei (paid/server lage): push notification jokhon tab bondho, TURN server, 2-step login, in-app video call, PDF upload, site screenshot thumbnail.
+
+V4 - SUPPORT DESK APP (control room)
+- Control room ekhon alada app: 'Support Desk' (nijer icon, nijer manifest). Phone-e /ops-k7x2q/ khule 'Install' chapun.
+- Phone-e WhatsApp-er moto chat: list > chat full screen > niche reply bar. Niche tab bar: Inbox, Dashboard, Team, Meeting, More.
+- Android back button chat theke list-e ferot ashe.
+- Push notification (app bondho thakle) ei version-e nei, Blaze plan lagbe.
