@@ -1,34 +1,523 @@
-<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#060c09"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><title>Support</title><link rel="stylesheet" href="app.css"></head><body>
-<header><div class="lg" id="lg"></div></header>
-<nav><a href="#home"><b>🏠</b>Home</a><a href="#team"><b>👥</b>Support Team</a><a href="#chat"><b>💬</b>Chat</a><a href="#show"><b>🖼</b>Showcase</a></nav>
-<main><section class="pg" id="home"></section><section class="pg" id="team"></section><section class="pg" id="chat"></section><section class="pg" id="show"></section><footer><a href="admin/">⚙ Admin login</a></footer></main>
-<script type="module">
-import {getSettings,list,send,watch,STATUS} from './firebase/data.js';
-import {e,$,$$,u,wa,chart} from './ui.js';
-let S={},T=[],FQ=[],SH=[],cur,un=()=>{},dp;
-const vid=localStorage.snk_vid||(localStorage.snk_vid=Math.random().toString(36).slice(2,10));
-const ini=m=>m.photo?`<img class="ph" src="${e(m.photo)}" alt="${e(m.name)}">`:`<div class="ini">${e((m.name||'?')[0])}</div>`;
-const card=m=>{const[lb,co]=STATUS[m.status]||STATUS.offline;return`<div class="mem"><div class="pw">${ini(m)}<span class="st" style="--c:${co}">${lb}</span></div><div class="mi"><h3>${e(m.name)}</h3><small>${e(m.role)}</small><p>${e(m.blurb)}</p>${m.statusNote?`<p class="nt">${e(m.statusNote)}</p>`:''}<div class="acts">${m.phone?`<a target="_blank" rel="noopener" href="${wa(m.phone)}">WhatsApp</a><a href="tel:${e(m.phone)}">📞 Call</a>`:''}${m.email?`<a href="mailto:${e(m.email)}">✉ Email</a>`:''}<button data-chat="${e(m.id)}">💬 Chat</button></div></div></div>`};
-function draw(){document.title=S.name||'Support';$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
-const l=(S.chL||'Jan,Feb,Mar,Apr,May,Jun').split(',').map(x=>x.trim()),v=(S.chV||'40,65,52,90,78,120').split(',').map(Number),sum=v.reduce((a,b)=>a+b,0);
-$('#home').innerHTML=`<div class="hero" ${S.heroI?`style="background-image:linear-gradient(#060c09b3,#060c09f0),url('${e(S.heroI)}')"`:''}><h1>${e(S.heroT||S.name)}</h1><p>${e(S.heroS||S.tagline)}</p><div class="hb"><a class="btn" href="#chat">💬 Chat now</a>${S.phone?`<a class="btn g" target="_blank" rel="noopener" href="${wa(S.phone)}">WhatsApp</a>`:''}<a class="btn g" href="#team">Meet the team</a><button class="btn g" id="ins" hidden>⬇ Install app</button>${S.apkUrl?`<a class="btn g" href="${u(S.apkUrl)}">🤖 Download APK</a>`:''}</div></div><div class="card"><h3>${e(S.chT||'Tickets solved')}</h3><div class="kp"><div><b>${sum}</b><small>Total</small></div><div><b>${Math.max(...v)}</b><small>Best</small></div><div><b>${v.length>1&&v[0]?Math.round((v[v.length-1]-v[0])/v[0]*100):0}%</b><small>Growth</small></div></div>${chart(l,v)}</div>`;
-if(dp){$('#ins').hidden=0;$('#ins').onclick=()=>dp.prompt()}
-$('#team').innerHTML=`<h2>Support team</h2><div class="grid">${T.map(card).join('')}</div>`;
-$('#show').innerHTML=`<h2>Showcase</h2><div class="grid">${SH.map((s,i)=>`<a class="sc" ${s.link?`target="_blank" rel="noopener" href="${u(s.link)}"`:''}>${s.img?`<img src="${e(s.img)}" alt="${e(s.title)}">`:`<div class="ini">${i+1}</div>`}<b>${e(s.title)}</b></a>`).join('')||'<p>Showcase-e ekhono kichu nei.</p>'}</div>`;
-$$('[data-chat]').forEach(b=>b.onclick=()=>{cur=b.dataset.chat;location.hash='#chat'})}
-const BOT={id:'bot',name:'Assistant',role:'Instant answers',status:'available'};let bm=[];
-const ans=q=>{const s=q.toLowerCase(),h=FQ.find(f=>f.k.split(',').some(w=>w.trim()&&s.includes(w.trim())));return h?h.a:'Eta amar basic Q&A-r baire. Upor theke kono team member select kore chat korun.'};
-function chat(){un();const L=[BOT,...T],m=L.find(x=>x.id==cur)||BOT;cur=m.id;const bot=m.id=='bot',sid=vid+'-'+m.id;
-$('#chat').innerHTML=`<h2>Chat</h2><div class="pick">${L.map(x=>`<button class="pk ${x.id==cur?'on':''}" data-p="${e(x.id)}">${e(x.name.split(' ')[0])}</button>`).join('')}</div><div class="card"><b>${e(m.name)}</b> <small>${bot?'Instant FAQ answers':(STATUS[m.status]||[''])[0]}</small><div class="msgs" id="ms"></div><div class="acts"><input id="mi" placeholder="Message likhun..."><button id="sd">Send</button></div></div>`;
-$$('[data-p]').forEach(b=>b.onclick=()=>{cur=b.dataset.p;chat()});
-const show=d=>{const x=$('#ms');if(!x)return;x.innerHTML=d.map(y=>`<div class="m ${y.from=='visitor'?'me':''}">${e(y.text)}</div>`).join('')||'<small>Prothom message likhun.</small>';x.scrollTop=1e9};
-if(bot)show(bm);else un=watch(sid,show);
-const go=async()=>{const i=$('#mi'),t=i.value.trim();if(!t)return;i.value='';if(bot){bm.push({from:'visitor',text:t},{from:'bot',text:ans(t)});return show(bm)}const n=localStorage.snk_vn||(localStorage.snk_vn=prompt('Apnar naam?')||'Guest');try{await send(sid,{member:m.name,mid:m.id,text:t,from:'visitor',by:n})}catch(x){alert('Message pathano gelo na.')}};
-$('#sd').onclick=go;$('#mi').onkeydown=x=>x.key=='Enter'&&go()}
-function route(){let h=(location.hash||'#home').slice(1);if(!['home','team','chat','show'].includes(h))h='home';$$('.pg').forEach(p=>p.classList.toggle('on',p.id==h));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+h));if(h=='chat')chat();else un();scrollTo(0,0)}
-addEventListener('hashchange',route);
-addEventListener('beforeinstallprompt',x=>{x.preventDefault();dp=x;const b=$('#ins');if(b){b.hidden=0;b.onclick=()=>dp.prompt()}});
-try{[S,T,FQ,SH]=await Promise.all([getSettings(),list('team'),list('faq'),list('showcase').catch(()=>[])])}catch(x){console.error(x)}
-SH=SH||[];draw();route();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-</script></body></html>
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06100b">
+  <meta name="description" content="WebsiteDeals Support Center — connect with our team, get instant help from Usha.ai, and explore our work.">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+
+  <title>WebsiteDeals Support Center</title>
+</head>
+
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a href="#home" class="brand" id="brand" aria-label="Support home">
+      <span class="brand-mark">W<span>.</span></span>
+      <span class="brand-copy">
+        <strong id="brand-name">WebsiteDeals</strong>
+        <small>SUPPORT CENTER</small>
+      </span>
+    </a>
+
+    <button class="menu-toggle" id="menu-toggle"
+      aria-label="Open navigation" aria-expanded="false"
+      aria-controls="main-nav">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="main-nav" aria-label="Main navigation">
+      <a href="#home" class="nav-link on"><span>⌂</span> Home</a>
+      <a href="#team" class="nav-link"><span>♧</span> Our Team</a>
+      <a href="#chat" class="nav-link"><span>◉</span> Live Chat</a>
+      <a href="#show" class="nav-link"><span>▧</span> Showcase</a>
+      <a href="#chat" class="nav-cta">Get Support <span>↗</span></a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="page active" id="home" aria-labelledby="hero-title">
+      <div class="loading-state">Preparing your support experience...</div>
+    </section>
+
+    <section class="page" id="team" aria-labelledby="team-title"></section>
+    <section class="page" id="chat" aria-labelledby="chat-title"></section>
+    <section class="page" id="show" aria-labelledby="show-title"></section>
+
+    <footer class="footer">
+      <a class="footer-brand" href="#home">WebsiteDeals<span>.</span></a>
+      <p>Built to help you move forward.</p>
+      <div class="footer-links">
+        <a href="#team">Our Team</a>
+        <a href="#chat">Get Support</a>
+        <a href="admin/">Admin Login ↗</a>
+      </div>
+      <small>© <span id="year"></span> <span id="footer-name">WebsiteDeals</span>. All rights reserved.</small>
+    </footer>
+  </main>
+
+  <button class="ai-float" id="ai-float" aria-label="Chat with Usha AI">
+    <span class="ai-float-icon">✳</span>
+    <span class="ai-float-copy">
+      <strong>Ask Usha.ai</strong>
+      <small>Instant support</small>
+    </span>
+    <span class="ai-float-status"></span>
+  </button>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import {
+      getSettings, list, send, watch, STATUS
+    } from './firebase/data.js';
+
+    import { e, $, $$, u, wa, chart } from './ui.js';
+
+    const $id = id => document.getElementById(id);
+
+    let settings = {};
+    let team = [];
+    let faqs = [];
+    let showcase = [];
+    let currentChat = 'bot';
+    let unsubscribe = () => {};
+    let installPrompt = null;
+    let botMessages = [];
+    let toastTimer;
+
+    const visitorId = (() => {
+      try {
+        let id = localStorage.getItem('snk_vid');
+        if (!id) {
+          id = crypto.randomUUID
+            ? crypto.randomUUID().replaceAll('-', '').slice(0, 16)
+            : Math.random().toString(36).slice(2, 18);
+
+          localStorage.setItem('snk_vid', id);
+        }
+        return id;
+      } catch {
+        return Math.random().toString(36).slice(2, 18);
+      }
+    })();
+
+    function notify(message) {
+      const el = $id('toast');
+      if (!el) return;
+
+      el.textContent = message;
+      el.classList.add('visible');
+
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        el.classList.remove('visible');
+      }, 3200);
+    }
+
+    function escapeText(value) {
+      return e(String(value ?? ''));
+    }
+
+    function getStatus(member) {
+      const status = STATUS?.[member.status] || STATUS?.offline;
+      return Array.isArray(status)
+        ? { label: status[0] || 'Offline', color: status[1] || '#64748b' }
+        : { label: 'Offline', color: '#64748b' };
+    }
+
+    function avatar(member, large = false) {
+      const name = member.name || 'Support';
+      const photo = u(member.photo || '');
+
+      if (photo) {
+        return `
+          <img class="avatar-photo ${large ? 'avatar-large' : ''}"
+               src="${escapeText(photo)}"
+               alt="${escapeText(name)}"
+               loading="lazy"
+               referrerpolicy="no-referrer">
+        `;
+      }
+
+      const initials = name.trim().split(/\s+/)
+        .slice(0, 2).map(part => part[0] || '').join('').toUpperCase();
+
+      return `
+        <span class="avatar-fallback ${large ? 'avatar-large' : ''}">
+          ${escapeText(initials || 'S')}
+        </span>
+      `;
+    }
+
+    function memberCard(member) {
+      const status = getStatus(member);
+
+      return `
+        <article class="member-card">
+          <div class="member-cover">
+            <span class="member-orbit"></span>
+            <div class="member-avatar">${avatar(member, true)}</div>
+            <span class="status-pill">
+              <i style="--status-color:${escapeText(status.color)}"></i>
+              ${escapeText(status.label)}
+            </span>
+          </div>
+
+          <div class="member-content">
+            <span class="eyebrow">SUPPORT TEAM</span>
+            <h3>${escapeText(member.name || 'Team Member')}</h3>
+            <p class="member-role">${escapeText(member.role || 'Support Specialist')}</p>
+            <p class="member-bio">
+              ${escapeText(member.blurb || 'Here to help you with your questions.')}
+            </p>
+
+            ${member.statusNote ? `
+              <p class="member-note">${escapeText(member.statusNote)}</p>
+            ` : ''}
+
+            <div class="member-actions">
+              <button class="button button-primary button-small"
+                type="button" data-chat="${escapeText(member.id)}">
+                <span>◉</span> Chat
+              </button>
+
+              ${member.phone ? `
+                <a class="button button-secondary button-small"
+                   href="${escapeText(wa(member.phone))}"
+                   target="_blank" rel="noopener noreferrer">
+                  WhatsApp ↗
+                </a>
+              ` : ''}
+
+              ${member.phone ? `
+                <a class="icon-button" href="tel:${escapeText(member.phone)}"
+                   aria-label="Call ${escapeText(member.name)}">☎</a>
+              ` : ''}
+
+              ${member.email ? `
+                <a class="icon-button"
+                   href="mailto:${escapeText(member.email)}"
+                   aria-label="Email ${escapeText(member.name)}">✉</a>
+              ` : ''}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderHome() {
+      const labels = String(settings.chL || 'Jan,Feb,Mar,Apr,May,Jun')
+        .split(',').map(x => x.trim()).filter(Boolean);
+
+      const values = String(settings.chV || '40,65,52,90,78,120')
+        .split(',').map(Number).filter(Number.isFinite);
+
+      const total = values.reduce((sum, value) => sum + value, 0);
+      const best = values.length ? Math.max(...values) : 0;
+      const growth = values.length > 1 && values[0] !== 0
+        ? Math.round(((values.at(-1) - values[0]) / Math.abs(values[0])) * 100)
+        : 0;
+
+      const heroImage = u(settings.heroI || '');
+      const heroStyle = heroImage
+        ? `style="--hero-image:url('${escapeText(heroImage)}')"`
+        : '';
+
+      const brandName = settings.name || 'WebsiteDeals';
+
+      document.title = `${brandName} | Support Center`;
+      $id('brand-name').textContent = brandName;
+      $id('footer-name').textContent = brandName;
+
+      $id('brand').querySelector('.brand-mark').innerHTML =
+        settings.logo
+          ? `<img src="${escapeText(u(settings.logo))}" alt="">`
+          : 'W<span>.</span>';
+
+      const heroTitle = settings.heroT || 'We’re here to help you grow.';
+      const heroSubtitle = settings.heroS ||
+        settings.tagline ||
+        'Get answers, connect with our team, and take your next step with confidence.';
+
+      $id('home').innerHTML = `
+        <div class="hero ${heroImage ? 'hero-with-image' : ''}" ${heroStyle}>
+          <div class="hero-content">
+            <div class="hero-badge">
+              <span class="live-dot"></span>
+              YOUR DIGITAL SUPPORT PARTNER
+            </div>
+
+            <h1 id="hero-title">${escapeText(heroTitle)}</h1>
+            <p class="hero-description">${escapeText(heroSubtitle)}</p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="#chat">
+                Start a Conversation <span>↗</span>
+              </a>
+              <a class="button button-secondary" href="#team">
+                Meet the Team
+              </a>
+            </div>
+
+            <div class="hero-trust">
+              <span class="trust-icon">✳</span>
+              <span>AI assistance</span>
+              <span class="trust-separator">·</span>
+              <span>Human support</span>
+              <span class="trust-separator">·</span>
+              <span>One place</span>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="visual-ring ring-one"></div>
+            <div class="visual-ring ring-two"></div>
+            <div class="visual-core">
+              <span class="visual-spark">✳</span>
+              <strong>WD</strong>
+              <small>SUPPORT</small>
+            </div>
+            <div class="floating-chip chip-top">
+              <span class="chip-dot"></span> Here to help
+            </div>
+            <div class="floating-chip chip-bottom">
+              <span class="chip-symbol">✦</span> Usha.ai
+            </div>
+          </div>
+        </div>
+
+        <section class="quick-grid" aria-label="Support options">
+          <a class="quick-card" href="#chat">
+            <span class="quick-icon">✳</span>
+            <span class="quick-copy">
+              <strong>Usha.ai Assistant</strong>
+              <small>Get instant FAQ answers</small>
+            </span>
+            <span class="quick-arrow">↗</span>
+          </a>
+
+          <a class="quick-card" href="#team">
+            <span class="quick-icon">♧</span>
+            <span class="quick-copy">
+              <strong>Human Support</strong>
+              <small>Connect with our team</small>
+            </span>
+            <span class="quick-arrow">↗</span>
+          </a>
+
+          <a class="quick-card" href="#show">
+            <span class="quick-icon">▧</span>
+            <span class="quick-copy">
+              <strong>Our Showcase</strong>
+              <small>Explore selected projects</small>
+            </span>
+            <span class="quick-arrow">↗</span>
+          </a>
+        </section>
+
+        <section class="section-block analytics-section">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">AT A GLANCE</span>
+              <h2>${escapeText(settings.chT || 'Support overview')}</h2>
+              <p>A quick look at the configured support metrics.</p>
+            </div>
+            <span class="heading-icon">↗</span>
+          </div>
+
+          <div class="analytics-card">
+            <div class="metric-grid">
+              <div class="metric">
+                <span class="metric-label">Total</span>
+                <strong>${total.toLocaleString()}</strong>
+                <small>Configured value</small>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Peak value</span>
+                <strong>${best.toLocaleString()}</strong>
+                <small>Highest data point</small>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Change</span>
+                <strong class="${growth < 0 ? 'negative' : ''}">${growth}%</strong>
+                <small>First to last point</small>
+              </div>
+            </div>
+
+            <div class="chart-area">
+              ${chart(labels, values)}
+            </div>
+            <p class="chart-disclaimer">
+              Metrics use the configured chart settings. They are not verified live ticket counts.
+            </p>
+          </div>
+        </section>
+
+        <section class="section-block home-team">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">REAL PEOPLE, REAL SUPPORT</span>
+              <h2>Meet your support team.</h2>
+              <p>Find the right person to help with your next step.</p>
+            </div>
+            <a class="text-link" href="#team">View all members ↗</a>
+          </div>
+          <div class="grid member-grid">
+            ${team.slice(0, 3).map(memberCard).join('')}
+          </div>
+        </section>
+
+        <section class="closing-banner">
+          <div>
+            <span class="eyebrow">NEED A HAND?</span>
+            <h2>Let’s solve it together.</h2>
+            <p>Start with Usha.ai or connect directly with a team member.</p>
+          </div>
+          <a class="button button-primary" href="#chat">Get Support ↗</a>
+        </section>
+      `;
+
+      if (settings.phone) {
+        const heroActions = $id('home').querySelector('.hero-actions');
+        const whatsapp = document.createElement('a');
+        whatsapp.className = 'button button-secondary';
+        whatsapp.href = wa(settings.phone);
+        whatsapp.target = '_blank';
+        whatsapp.rel = 'noopener noreferrer';
+        whatsapp.textContent = 'WhatsApp ↗';
+        heroActions.append(whatsapp);
+      }
+    }
+
+    function renderTeam() {
+      $id('team').innerHTML = `
+        <div class="page-heading">
+          <span class="eyebrow">PEOPLE BEHIND THE SUPPORT</span>
+          <h1 id="team-title">Meet the team<span class="title-dot">.</span></h1>
+          <p>Real people, thoughtful answers, and support when you need it.</p>
+        </div>
+
+        ${team.length ? `
+          <div class="grid member-grid">${team.map(memberCard).join('')}</div>
+        ` : `
+          <div class="empty-state">
+            <span>♧</span>
+            <h2>Our team is getting ready.</h2>
+            <p>Team profiles will appear here when available.</p>
+          </div>
+        `}
+      `;
+    }
+
+    function renderShowcase() {
+      $id('show').innerHTML = `
+        <div class="page-heading">
+          <span class="eyebrow">A FEW THINGS WE’VE BUILT</span>
+          <h1 id="show-title">Selected work<span class="title-dot">.</span></h1>
+          <p>Explore projects, creative work, and digital experiences.</p>
+        </div>
+
+        ${showcase.length ? `
+          <div class="grid showcase-grid">
+            ${showcase.map((item, index) => {
+              const href = u(item.link || '');
+              const tag = href ? 'a' : 'article';
+
+              return `
+                <${tag} class="showcase-card"
+                  ${href ? `href="${escapeText(href)}" target="_blank" rel="noopener noreferrer"` : ''}>
+                  <div class="showcase-image">
+                    ${item.img ? `
+                      <img src="${escapeText(u(item.img))}"
+                        alt="${escapeText(item.title || 'Project')}"
+                        loading="lazy">
+                    ` : `
+                      <div class="showcase-placeholder">${String(index + 1).padStart(2, '0')}</div>
+                    `}
+                    <span class="showcase-open">${href ? '↗' : '✦'}</span>
+                  </div>
+                  <div class="showcase-copy">
+                    <span class="eyebrow">PROJECT ${(index + 1).toString().padStart(2, '0')}</span>
+                    <h3>${escapeText(item.title || 'Untitled project')}</h3>
+                    <p>${escapeText(item.description || 'A project from our showcase.')}</p>
+                    ${href ? '<span class="text-link">Explore project ↗</span>' : ''}
+                  </div>
+                </${tag}>
+              `;
+            }).join('')}
+          </div>
+        ` : `
+          <div class="empty-state">
+            <span>▧</span>
+            <h2>Something great is on the way.</h2>
+            <p>Our project showcase will be updated soon.</p>
+          </div>
+        `}
+      `;
+    }
+
+    const BOT = {
+      id: 'bot',
+      name: 'Usha.ai',
+      role: 'Instant FAQ Assistant',
+      status: 'available',
+      blurb: 'Your first stop for quick answers.'
+    };
+
+    function findAnswer(question) {
+      const query = question.toLocaleLowerCase().trim();
+
+      const match = faqs.find(item => {
+        const keywords = String(item.k || '')
+          .split(',')
+          .map(word => word.trim().toLocaleLowerCase())
+          .filter(Boolean);
+
+        return keywords.some(keyword => query.includes(keyword));
+      });
+
+      return match?.a ||
+        'I couldn’t find an exact answer in my current FAQ knowledge base. Please select a team member or contact our support team for help.';
+    }
+
+    function renderChat() {
+      unsubscribe();
+      unsubscribe = () => {};
+
+      const selected = [BOT, ...team].find(item => item.id === currentChat) || BOT;
+      currentChat = selected.id;
+
+      const isBot = selected.id === 'bot';
+      const sessionId = `${visitorId}-${selected.id}`;
+
+      $id('chat').innerHTML = `
+        <div class="page-heading chat-heading">
+          <span class="eyebrow">WE’RE HERE FOR YOU</span>
+          <h1 id="chat-title">Let’s talk<span class="title-dot">.</span></h1>
+          <p>Ask Usha.ai a quick question or start a conversation with our team.</p>
+        </div>
+
+        <div class="chat-layout">
+          <aside class="chat-sidebar">
+            <div class="sidebar-heading">
+              <span class="eyebrow">YOUR SUPPORT OPTIONS</span>
+              <h3>Choose a conversation</h3>
+            </div>
+
+            <button class="conversation-option ${isBot ? 'selected' : ''}"
+              type="button" data-p="bot">
+              <span class="conversation-avatar ai-avatar">✳</span>
+              <span class="conversation-copy">
