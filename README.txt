@@ -1,26 +1,18 @@
-SUPPORT TEAM - WEB + APK
-========================
-WEB (GitHub Pages)
-1. Ei folder-er sob file (.github folder shoho) apnar repo-te upload/push korun.
-2. Repo Settings > Pages > Branch: main > Save.
-3. Site: https://yourdocuments.github.io/suppfgdfgfh.github.io/ (ba apnar Pages link)
+SNK SUPPORT - COMPLETE (web + APK)
+==================================
+Folder structure:
+  index.html, app.css, ui.js, manifest.json, sw.js, icons   -> main site (PWA)
+  admin/index.html                                          -> admin dashboard (login ekhane-i)
+  firebase/data.js, auth.js, config.js                      -> apnar Firebase code (same, sudhu comment ek line)
+  firestore.rules                                           -> Firebase Console > Firestore > Rules-e paste + Publish
+  .github/workflows/build-apk.yml + package.json + capacitor.config.json -> APK auto build
 
-ADMIN
-- Site-er niche "Admin" > password (default: admin123) > Settings-e jaan.
-- Password pehle-i change korun. Eta shudhu halka lock, boro security noy.
-- Save korle edit shudhu OI phone/browser-e thake.
-  Sobar jonno: Admin > Export > "data.json" file-ta repo-te upload korun.
+UPLOAD
+1. Repo-r root-e sob file upload korun (.github folder shoho). Ager index.html ar admin/ replace hobe.
+   Ager firebase/ folder-e apnar nijer file thakle oigulo-i rakhte paren.
+2. firestore.rules publish korun.
+3. Settings > Pages ON thakle site live. Admin: /admin/  (super admin: Firebase email/password diye login)
+4. Super admin > Team > protita member Save korun > "Create staff login".
 
-LIVE GROUP CHAT
-- firebase.google.com > Realtime Database > Create > Rules: read/write true (test mode).
-- Database URL Admin > Team meeting > Firebase URL-e din.
-
-APK
-- Repo-te push korle GitHub > Actions > "Build APK" auto chole.
-- Shesh hole oi run-er "Artifacts" theke support-team-apk download korun (app-debug.apk).
-- Alternative: pwabuilder.com-e site link diye Android APK banano jay.
-
-PURANO ADMIN / DASHBOARD REPLACE KORA
-- Repo theke ager admin/ folder-er sob file DELETE korun, tarpor ei zip-er admin/ folder upload korun.
-- Notun admin ekhon main site-er moddhei. /admin/ link khulle auto notun admin-e jabe.
-- Purano design dekhale: browser-e Site data / cache clear korun (ba Ctrl+Shift+R).
+APK: push korle GitHub > Actions > Build APK > Artifacts > app-debug.apk
+Cache atke thakle Ctrl+Shift+R.

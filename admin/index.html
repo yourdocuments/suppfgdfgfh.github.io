@@ -1,1 +1,50 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=../index.html#admin"><title>Admin</title></head><body><script>location.replace('../index.html#admin')</script><a href="../index.html#admin">Admin kholun</a></body></html>
+<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#060c09"><title>Admin</title><link rel="stylesheet" href="../app.css"></head><body>
+<div id="app"></div>
+<script type="module">
+import {getSettings,saveSettings,list,save,del,STATUS,send,watch,watchThreads} from '../firebase/data.js';
+import {login,session,logout,reset,createStaff} from '../firebase/auth.js';
+import {e,$,u,pic} from '../ui.js';
+const A=$('#app'),R=[],NEW={team:{name:'New member',role:'',blurb:'',phone:'',email:'',photo:'',status:'available',statusNote:''},faq:{k:'keyword1,keyword2',a:'Answer'},showcase:{title:'New item',img:'',link:''}};
+let ss,tab,K={},name='Admin',subs=[],tsub=()=>{},cs=null;
+const reg=o=>R.push(o)-1;
+const load=async c=>K[c]||(K[c]=c=='s'?await getSettings():(await list(c).catch(()=>[]))||[]);
+function fld(o,k,t,type){const d=`data-o="${reg(o)}" data-k="${k}"`;
+if(type=='i')return`<label>${t}<input type="file" accept="image/*" ${d}></label>${o[k]?`<img src="${e(o[k])}" alt="" style="height:70px;border-radius:14px;margin-bottom:8px">`:''}`;
+if(type=='a')return`<label>${t}<textarea rows="3" ${d}>${e(o[k])}</textarea></label>`;
+if(type=='s')return`<label>${t}<select ${d}>${Object.entries(STATUS).map(([x,[n]])=>`<option value="${x}" ${o[k]==x?'selected':''}>${n}</option>`).join('')}</select></label>`;
+return`<label>${t}<input value="${e(o[k])}" ${d}></label>`}
+const btns=(c,o)=>{const i=reg(o);return`<div class="acts"><button data-a="sv" data-c="${c}" data-i="${i}">💾 Save</button><button data-a="dl" data-c="${c}" data-i="${i}" style="background:#ff6b6b;color:#fff">🗑 Delete</button></div>`};
+function loginUI(){A.innerHTML=`<div class="af"><div class="card"><h2>Admin login</h2><label>Email<input id="le" type="email"></label><label>Password<input id="lp" type="password"></label><div class="hb"><button class="btn" data-a="in">Login</button><button class="btn g" data-a="fp">Forgot password</button><a class="btn g" href="../index.html">← Site</a></div></div></div>`}
+async function body(){
+if(tab=='dash'){const[t,f,h]=await Promise.all([load('team'),load('faq'),load('showcase')]);return`<div class="card"><div class="kp"><div><b>${t.length}</b><small>Team</small></div><div><b>${f.length}</b><small>FAQ</small></div><div><b>${h.length}</b><small>Showcase</small></div></div></div><div class="card">${t.map(m=>`<div class="m" style="max-width:100%;margin-bottom:6px"><b>${e(m.name)}</b>${(STATUS[m.status]||[''])[0]}${m.statusNote?' · '+e(m.statusNote):''}</div>`).join('')}</div>`}
+if(tab=='settings'){const S=await load('s');return`<div class="card">${[['name','Site naam'],['tagline','Tagline'],['phone','Main WhatsApp number'],['website','Website'],['apkUrl','APK download link'],['heroT','Hero title'],['heroS','Hero subtitle'],['chT','Chart title'],['chL','Chart labels (comma diye)'],['chV','Chart values (comma diye)'],['meetTopic','Team meeting topic'],['meetLink','Meet / Zoom link']].map(([k,t])=>fld(S,k,t)).join('')}${fld(S,'logo','Logo','i')}${fld(S,'heroI','Hero background','i')}<button class="btn" data-a="ss">💾 Save settings</button></div>`}
+if(tab=='team'){const T=await load('team');return T.map(m=>{const i=reg(m);return`<div class="card">${fld(m,'name','Naam')}${fld(m,'role','Role')}${fld(m,'blurb','Intro','a')}${fld(m,'phone','WhatsApp / Call number (88017...)')}${fld(m,'email','Email')}${fld(m,'photo','Profile chobi (boro)','i')}${fld(m,'status','Status','s')}${fld(m,'statusNote','Status note')}${btns('team',m)}${m.id?`<label style="margin-top:12px">Staff login<input id="se${i}" placeholder="staff email"><input id="sp${i}" placeholder="password (6+ char)"></label><button class="btn g" data-a="mk" data-i="${i}">Create staff login</button>`:''}</div>`}).join('')+`<button class="btn" data-a="ad" data-c="team" style="margin-top:18px">+ Add member</button>`}
+if(tab=='faq'){const F=await load('faq');return F.map(f=>`<div class="card">${fld(f,'k','Keywords (comma diye)')}${fld(f,'a','Answer','a')}${btns('faq',f)}</div>`).join('')+`<button class="btn" data-a="ad" data-c="faq" style="margin-top:18px">+ Add FAQ</button>`}
+if(tab=='showcase'){const H=await load('showcase');return H.map(s=>`<div class="card">${fld(s,'title','Title')}${fld(s,'img','Chobi','i')}${fld(s,'link','Link (optional)')}${btns('showcase',s)}</div>`).join('')+`<button class="btn" data-a="ad" data-c="showcase" style="margin-top:18px">+ Add item</button>`}
+if(tab=='me'){const T=await load('team'),m=T.find(x=>x.id==ss.mid);if(!m)return'<div class="card">Profile pawa jayni.</div>';return`<div class="card"><h3>${e(m.name)}</h3>${fld(m,'status','Status','s')}${fld(m,'statusNote','Status note')}<button class="btn" data-a="sv" data-c="team" data-i="${reg(m)}">💾 Save</button></div>`}
+if(tab=='inbox')return`<div class="card"><h3>Chats</h3><div id="th"></div></div><div class="card" id="tp" hidden><b id="tt"></b><div class="msgs" id="tm"></div><div class="acts"><input id="ri" placeholder="Reply..."><button data-a="rp">Send</button></div></div>`;
+if(tab=='room'){const S=await load('s');return`<div class="card"><h3>${e(S.meetTopic||'Team meeting')}</h3>${S.meetLink?`<a class="btn" target="_blank" rel="noopener" href="${u(S.meetLink)}">🎥 Join meeting</a>`:''}<div class="msgs" id="rm"></div><div class="acts"><input id="rmi" placeholder="Team-ke likhun..."><button data-a="mr">Send</button></div></div>`}}
+async function draw(){subs.forEach(f=>f());subs=[];tsub();R.length=0;const sup=ss.role=='super',tabs=sup?[['dash','Dashboard'],['settings','Settings'],['team','Team'],['faq','FAQ'],['showcase','Showcase'],['inbox','Inbox'],['room','Meeting']]:[['me','My status'],['inbox','Inbox'],['room','Meeting']];tab=tab||tabs[0][0];
+const h=await body();A.innerHTML=`<div class="abar"><b>⚙ ${sup?'Super admin':e(name)}</b><span><a class="btn g" href="../index.html">Site</a> <button class="btn g" data-a="out">Logout</button></span></div><div class="tabs">${tabs.map(([k,t])=>`<button class="btn ${k==tab?'':'g'}" data-t="${k}">${t}</button>`).join('')}</div><div class="af">${h}</div>`;
+if(tab=='inbox')subs.push(watchThreads(d=>{const x=$('#th');if(x)x.innerHTML=d.filter(y=>!/^room/.test(y.sid)).map(y=>`<div class="m" data-a="th" data-s="${e(y.sid)}" data-n="${e(y.by||'Visitor')}" style="cursor:pointer;max-width:100%"><b>${e(y.by||'Visitor')}</b>→ ${e(y.member||'')}<br><small>${e(y.last)}</small></div>`).join('')||'<small>Kono chat nei.</small>'},sup?undefined:ss.mid));
+if(tab=='room')subs.push(watch('room-team',d=>{const x=$('#rm');if(x){x.innerHTML=d.map(y=>`<div class="m"><b>${e(y.by)}</b>${e(y.text)}</div>`).join('')||'<small>Ekhono message nei.</small>';x.scrollTop=1e9}}))}
+function openT(s,n){tsub();cs=s;$('#tp').hidden=false;$('#tt').textContent=n;tsub=watch(s,d=>{const x=$('#tm');if(x&&cs==s){x.innerHTML=d.map(y=>`<div class="m ${y.from=='staff'?'me':''}">${e(y.text)}</div>`).join('');x.scrollTop=1e9}})}
+A.addEventListener('input',ev=>{const t=ev.target,k=t.dataset.k;if(k&&t.type!='file')R[t.dataset.o][k]=t.value});
+A.addEventListener('change',async ev=>{const t=ev.target,k=t.dataset.k;if(k&&t.type=='file'&&t.files[0]){R[t.dataset.o][k]=await pic(t.files[0],k=='heroI'?900:600,k=='logo'?'image/png':'image/jpeg');draw()}});
+A.onclick=async ev=>{const b=ev.target.closest('[data-a],[data-t]');if(!b)return;const d=b.dataset,o=R[d.i];
+try{if(d.t){tab=d.t;K={};return draw()}
+if(d.a=='in'){await login($('#le').value.trim(),$('#lp').value);return init()}
+if(d.a=='fp'){await reset($('#le').value.trim());return alert('Reset email pathano hoyeche.')}
+if(d.a=='out'){await logout();ss=null;K={};return loginUI()}
+if(d.a=='ss'){await saveSettings(K.s);return alert('Saved')}
+if(d.a=='sv'){await save(d.c,o);delete K[d.c];return alert('Saved')}
+if(d.a=='dl'){if(o.id&&confirm('Delete korben?')){await del(d.c,o.id);delete K[d.c];draw()}return}
+if(d.a=='ad'){await save(d.c,{...NEW[d.c]});delete K[d.c];return draw()}
+if(d.a=='mk'){await createStaff($('#se'+d.i).value.trim(),$('#sp'+d.i).value,o.id);return alert('Staff login created')}
+if(d.a=='th')return openT(d.s,d.n);
+if(d.a=='rp'){const i=$('#ri'),t=i.value.trim();if(t&&cs){i.value='';await send(cs,{text:t,from:'staff',by:name})}return}
+if(d.a=='mr'){const i=$('#rmi'),t=i.value.trim();if(t){i.value='';await send('room-team',{text:t,from:'staff',by:name})}}
+}catch(x){alert(x.message)}};
+async function init(){ss=await session();if(!ss)return loginUI();tab=null;K={};if(ss.role=='member')name=(await load('team')).find(x=>x.id==ss.mid)?.name||'Staff';draw()}
+init();
+</script></body></html>

@@ -1,128 +1,34 @@
-<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#12263f"><link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png"><title>Support Team</title>
-<style>
-:root{--bg:#eaf1f8;--sf:#fff;--tx:#12263f;--mu:#5d7188;--ac:#ffc533;--nv:#12263f;--bl:#3b82f6}
-*{box-sizing:border-box;margin:0}
-body{background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,"Segoe UI",Roboto,sans-serif;padding-bottom:88px}
-h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.15}
-a{color:inherit;text-decoration:none}button,input{font:inherit}
-header{padding:12px 18px;padding-top:calc(12px + env(safe-area-inset-top));position:sticky;top:0;z-index:20;background:#eaf1f8ee;backdrop-filter:blur(10px)}
-.lg{display:flex;align-items:center;gap:10px;font:700 20px Georgia,serif}
-.lg img{height:38px;border-radius:10px}
-.lg i{width:38px;height:38px;border-radius:12px;background:var(--nv);color:var(--ac);display:grid;place-items:center;font-style:normal}
-nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 24px #12263f1a;z-index:30}
-nav a{flex:1;text-align:center;font-size:12px;padding:8px 2px;border-radius:14px;color:var(--mu);transition:.25s}
-nav a b{display:block;font-size:20px}nav a.on{background:var(--nv);color:#fff}
-main{max-width:1000px;margin:auto;padding:14px 18px}
-.pg{display:none}.pg.on{display:block}
-.hero{position:relative;overflow:hidden;border-radius:30px;padding:46px 26px;background:var(--nv) center/cover;color:#fff;min-height:320px;display:flex;flex-direction:column;justify-content:center;gap:16px}
-.hero:before,.hero:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;filter:blur(64px);opacity:.55;animation:fl 8s ease-in-out infinite alternate}
-.hero:before{background:var(--bl);top:-90px;right:-70px}.hero:after{background:var(--ac);bottom:-120px;left:-70px;animation-delay:-4s}
-@keyframes fl{to{transform:translate(-50px,50px) scale(1.25)}}
-.hero>*{position:relative;z-index:1}.hero p{max-width:46ch;color:#d4e0ee}
-h1{font-size:clamp(30px,7vw,52px)}h2{font-size:28px}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 18px;border-radius:14px;background:var(--ac);color:var(--nv);font-weight:700;border:0;cursor:pointer;transition:transform .2s}
-.btn:hover{transform:translateY(-2px)}.btn.g{background:#12263f14;color:var(--tx)}.hero .btn.g{background:#ffffff26;color:#fff}
-.card{background:var(--sf);border-radius:22px;padding:18px;margin-top:18px}
-.kp{display:flex;gap:28px;margin:10px 0}.kp b{display:block;font:700 28px Georgia,serif}.kp small{color:var(--mu)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:16px}
-.mem{background:var(--sf);border-radius:30px 30px 20px 20px;overflow:hidden;position:relative}
-.rv{opacity:0;transform:translateY(22px);transition:opacity .6s,transform .6s}.rv.vi{opacity:1;transform:none}
-.mem.vi:hover{transform:translateY(-6px)}
-.ph{aspect-ratio:1;width:100%;object-fit:cover;display:block}
-.ini{aspect-ratio:1;width:100%;display:grid;place-items:center;font:700 84px Georgia,serif;background:linear-gradient(135deg,#cfe0f3,#a9c4e4);color:var(--nv)}
-.mi{padding:14px}.mi small{color:var(--mu)}
-.dot{position:absolute;top:12px;right:12px;padding:3px 10px;border-radius:99px;background:#fffe;font-size:12px}
-.dot:before{content:"●";color:#94a3b8;margin-right:5px}.dot.on:before{color:#22c55e}
-.acts{display:flex;gap:6px;margin-top:10px}.acts a{flex:1;text-align:center;padding:9px 0;border-radius:12px;background:#12263f0f;font-size:13px}
-.acts a:first-child{background:#25d366;color:#04230f}.acts input{margin:0}
-.row{display:flex;gap:14px;align-items:center}
-.row .ph,.row .ini{width:88px;height:88px;aspect-ratio:auto;border-radius:26px;font-size:36px;flex:none}
-.tabs{display:flex;gap:8px;margin:14px 0 0}
-.msgs{height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:12px 0}
-.m{background:#12263f0d;border-radius:14px;padding:8px 12px}.m b{margin-right:6px}
-.sc img,.sc .ini{aspect-ratio:4/3;width:100%;object-fit:cover;border-radius:20px;display:block;cursor:zoom-in}.sc .ini{font-size:48px}.sc b{display:block;margin-top:6px}
-.bar{animation:gr 1s cubic-bezier(.2,.8,.2,1) backwards;transform-box:fill-box;transform-origin:bottom}
-@keyframes gr{from{transform:scaleY(0)}}
-.ln{stroke-dasharray:1;animation:dr 1.6s .4s ease-out backwards}@keyframes dr{from{stroke-dashoffset:1}}
-footer{text-align:center;padding:24px;color:var(--mu);font-size:14px}
-#lb{position:fixed;inset:0;background:#000d;display:none;place-items:center;z-index:60}#lb img{max-width:94%;max-height:90%;border-radius:16px}
-#adm{display:none;position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto}
-.abar{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--nv);color:#fff;z-index:2}
-.af{max-width:640px;margin:auto;padding:18px}.af h3{margin:24px 0 6px}
-label{display:block;font-size:14px;color:var(--mu)}
-input{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #12263f26;background:#fff;color:var(--tx);margin:4px 0 10px}
-input[type=checkbox]{width:auto;margin-right:6px}
-:focus-visible{outline:3px solid var(--bl);outline-offset:2px}
-@media(min-width:800px){nav{top:calc(8px + env(safe-area-inset-top));bottom:auto;left:auto;right:18px;background:none;box-shadow:none;padding:0}nav a{padding:9px 16px;font-size:15px}nav a b{display:none}body{padding-bottom:0}}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
-</style></head><body>
+<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#060c09"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><title>Support</title><link rel="stylesheet" href="app.css"></head><body>
 <header><div class="lg" id="lg"></div></header>
 <nav><a href="#home"><b>🏠</b>Home</a><a href="#team"><b>👥</b>Support Team</a><a href="#chat"><b>💬</b>Chat</a><a href="#show"><b>🖼</b>Showcase</a></nav>
-<main><section class="pg" id="home"></section><section class="pg" id="team"></section><section class="pg" id="chat"></section><section class="pg" id="show"></section>
-<footer><a href="#" id="ad">⚙ Admin</a></footer></main>
-<div id="lb"></div><div id="adm"></div>
-<script>
-const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s),e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const D={name:"Support Team",logo:"",pass:"admin123",
-hero:{t:"Amader Support Team, Apnar Pashe Sobsomoy",s:"Live chat, call, WhatsApp ar team meeting — sob ek jaygay.",img:""},
-team:[{n:"Rahim Uddin",r:"Team Lead",img:"",wa:"8801700000000",ph:"+8801700000000",em:"rahim@example.com",on:1},{n:"Nusrat Jahan",r:"Customer Support",img:"",wa:"8801700000001",ph:"+8801700000001",em:"nusrat@example.com",on:1},{n:"Sabbir Ahmed",r:"Technical Support",img:"",wa:"8801700000002",ph:"+8801700000002",em:"sabbir@example.com",on:0}],
-show:[{t:"Project One",img:""},{t:"Project Two",img:""},{t:"Project Three",img:""}],
-chart:{title:"Monthly tickets solved",l:["Jan","Feb","Mar","Apr","May","Jun"],v:[40,65,52,90,78,120]},
-meet:{topic:"Weekly team discussion",link:""},fb:""};
-let S=Object.assign({},D,JSON.parse(localStorage.getItem('sts')||'{}')),W,dp;
-const av=m=>m.img?`<img class="ph" src="${e(m.img)}" alt="${e(m.n)}">`:`<div class="ini">${e((m.n||'?')[0])}</div>`;
-const acts=m=>`<div class="acts"><a target="_blank" rel="noopener" href="https://wa.me/${String(m.wa).replace(/\D/g,'')}">WhatsApp</a><a href="tel:${e(m.ph)}">📞 Call</a><a href="mailto:${e(m.em)}">✉ Email</a></div>`;
-const mem=m=>`<div class="mem rv">${av(m)}<span class="dot ${m.on?'on':''}">${m.on?'Online':'Offline'}</span><div class="mi"><b>${e(m.n)}</b><br><small>${e(m.r)}</small>${acts(m)}</div></div>`;
-function chart(){const{l,v}=S.chart,w=600,h=240,p=30,mx=Math.max(...v,1),bw=(w-p*2)/v.length;let b='',pt=[];
-v.forEach((x,i)=>{const H=(h-p*2)*x/mx,X=p+i*bw+bw*.15,Y=h-p-H,cx=X+bw*.35;b+=`<rect class="bar" style="animation-delay:${i*.09}s" x="${X}" y="${Y}" width="${bw*.7}" height="${H}" rx="8" fill="url(#g)"/><text x="${cx}" y="${Y-7}" text-anchor="middle" fill="#12263f" font-size="12" font-weight="700">${x}</text><text x="${cx}" y="${h-8}" text-anchor="middle" fill="#5d7188" font-size="12">${e(l[i]||'')}</text>`;pt.push(cx+','+Y)});
-return`<svg viewBox="0 0 ${w} ${h}" width="100%"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b82f6"/><stop offset="1" stop-color="#12263f"/></linearGradient></defs>${b}<polyline class="ln" pathLength="1" points="${pt.join(' ')}" fill="none" stroke="#f5a800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
-function render(){document.title=S.name;$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
-const h=S.hero,t=S.chart.v,sum=t.reduce((a,b)=>a+b,0);
-$('#home').innerHTML=`<div class="hero" ${h.img?`style="background-image:linear-gradient(#12263fb3,#12263fe6),url('${e(h.img)}')"`:''}><h1>${e(h.t)}</h1><p>${e(h.s)}</p><div><a class="btn" href="#chat">💬 Chat now</a> <a class="btn g" href="#team">Meet the team</a> <button class="btn g" id="ins" hidden>⬇ Install app</button></div></div><div class="card rv"><h3>${e(S.chart.title)}</h3><div class="kp"><div><b>${sum}</b><small>Total</small></div><div><b>${Math.max(...t)}</b><small>Best month</small></div><div><b>${t.length>1&&t[0]?Math.round((t[t.length-1]-t[0])/t[0]*100):0}%</b><small>Growth</small></div></div>${chart()}</div>`;
+<main><section class="pg" id="home"></section><section class="pg" id="team"></section><section class="pg" id="chat"></section><section class="pg" id="show"></section><footer><a href="admin/">⚙ Admin login</a></footer></main>
+<script type="module">
+import {getSettings,list,send,watch,STATUS} from './firebase/data.js';
+import {e,$,$$,u,wa,chart} from './ui.js';
+let S={},T=[],FQ=[],SH=[],cur,un=()=>{},dp;
+const vid=localStorage.snk_vid||(localStorage.snk_vid=Math.random().toString(36).slice(2,10));
+const ini=m=>m.photo?`<img class="ph" src="${e(m.photo)}" alt="${e(m.name)}">`:`<div class="ini">${e((m.name||'?')[0])}</div>`;
+const card=m=>{const[lb,co]=STATUS[m.status]||STATUS.offline;return`<div class="mem"><div class="pw">${ini(m)}<span class="st" style="--c:${co}">${lb}</span></div><div class="mi"><h3>${e(m.name)}</h3><small>${e(m.role)}</small><p>${e(m.blurb)}</p>${m.statusNote?`<p class="nt">${e(m.statusNote)}</p>`:''}<div class="acts">${m.phone?`<a target="_blank" rel="noopener" href="${wa(m.phone)}">WhatsApp</a><a href="tel:${e(m.phone)}">📞 Call</a>`:''}${m.email?`<a href="mailto:${e(m.email)}">✉ Email</a>`:''}<button data-chat="${e(m.id)}">💬 Chat</button></div></div></div>`};
+function draw(){document.title=S.name||'Support';$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
+const l=(S.chL||'Jan,Feb,Mar,Apr,May,Jun').split(',').map(x=>x.trim()),v=(S.chV||'40,65,52,90,78,120').split(',').map(Number),sum=v.reduce((a,b)=>a+b,0);
+$('#home').innerHTML=`<div class="hero" ${S.heroI?`style="background-image:linear-gradient(#060c09b3,#060c09f0),url('${e(S.heroI)}')"`:''}><h1>${e(S.heroT||S.name)}</h1><p>${e(S.heroS||S.tagline)}</p><div class="hb"><a class="btn" href="#chat">💬 Chat now</a>${S.phone?`<a class="btn g" target="_blank" rel="noopener" href="${wa(S.phone)}">WhatsApp</a>`:''}<a class="btn g" href="#team">Meet the team</a><button class="btn g" id="ins" hidden>⬇ Install app</button>${S.apkUrl?`<a class="btn g" href="${u(S.apkUrl)}">🤖 Download APK</a>`:''}</div></div><div class="card"><h3>${e(S.chT||'Tickets solved')}</h3><div class="kp"><div><b>${sum}</b><small>Total</small></div><div><b>${Math.max(...v)}</b><small>Best</small></div><div><b>${v.length>1&&v[0]?Math.round((v[v.length-1]-v[0])/v[0]*100):0}%</b><small>Growth</small></div></div>${chart(l,v)}</div>`;
 if(dp){$('#ins').hidden=0;$('#ins').onclick=()=>dp.prompt()}
-$('#team').innerHTML=`<h2>Support team</h2><div class="grid">${S.team.map(mem).join('')}</div>`;
-$('#chat').innerHTML=`<div class="tabs"><button class="btn" data-t="p">👤 Personal</button><button class="btn g" data-t="m">👥 Team meeting</button></div><div id="cp">${S.team.map(m=>`<div class="card row rv">${av(m)}<div style="flex:1"><b>${e(m.n)}</b> <small>${m.on?'🟢 Online':'⚪ Offline'} · ${e(m.r)}</small>${acts(m)}</div></div>`).join('')}</div><div id="cm" class="card" hidden><h3>${e(S.meet.topic)}</h3><p style="margin-top:10px"><button class="btn" id="jn">🎥 Join meeting</button></p><div class="msgs" id="ms"></div><div class="acts"><input id="mi" placeholder="Kichu likhun..."><button class="btn" id="sd">Send</button></div></div>`;
-$$('[data-t]').forEach(b=>b.onclick=()=>{$$('[data-t]').forEach(x=>x.classList.toggle('g',x!=b));$('#cp').hidden=b.dataset.t!='p';$('#cm').hidden=b.dataset.t!='m';if(b.dataset.t=='m')msgs()});
-$('#jn').onclick=()=>S.meet.link?open(S.meet.link,'_blank'):alert('Admin theke meeting link set korun.');
-$('#sd').onclick=send;$('#mi').onkeydown=x=>x.key=='Enter'&&send();
-$('#show').innerHTML=`<h2>Showcase</h2><div class="grid">${S.show.map((s,i)=>`<div class="sc rv">${s.img?`<img src="${e(s.img)}" alt="${e(s.t)}">`:`<div class="ini">${i+1}</div>`}<b>${e(s.t)}</b></div>`).join('')}</div>`;
-$$('.sc img').forEach(i=>i.onclick=()=>{$('#lb').innerHTML=`<img src="${i.src}" alt="">`;$('#lb').style.display='grid'})}
-$('#lb').onclick=()=>$('#lb').style.display='none';
-const API=()=>S.fb.replace(/\/$/,'')+'/msgs.json';
-async function msgs(){const bx=$('#ms');if(!bx)return;let m=[];try{if(S.fb){const r=await(await fetch(API())).json();m=r?Object.values(r):[]}else m=JSON.parse(localStorage.getItem('stm')||'[]')}catch(x){}
-m.sort((a,b)=>a.t-b.t);bx.innerHTML=m.slice(-60).map(x=>`<div class="m"><b>${e(x.u)}</b>${e(x.x)}</div>`).join('')||'<small>Ekhono kono message nei. Prothom message likhun.</small>';bx.scrollTop=1e9}
-async function send(){const i=$('#mi'),x=i.value.trim();if(!x)return;const u=localStorage.getItem('stu')||prompt('Apnar naam?')||'Guest';localStorage.setItem('stu',u);const o={u,x,t:Date.now()};
-try{if(S.fb)await fetch(API(),{method:'POST',body:JSON.stringify(o)});else{const m=JSON.parse(localStorage.getItem('stm')||'[]');m.push(o);localStorage.setItem('stm',JSON.stringify(m))}}catch(z){alert('Message pathano gelo na.')}i.value='';msgs()}
-setInterval(()=>{if(location.hash=='#chat'&&$('#cm')&&!$('#cm').hidden)msgs()},3000);
-function route(){if(location.hash=='#admin'){history.replaceState(null,'','#home');adm(1)}let h=(location.hash||'#home').slice(1);if(!['home','team','chat','show'].includes(h))h='home';$$('.pg').forEach(p=>p.classList.toggle('on',p.id==h));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+h));scrollTo(0,0);setTimeout(()=>{const o=new IntersectionObserver(r=>r.forEach(x=>{if(x.isIntersecting){x.target.classList.add('vi');o.unobserve(x.target)}}));$$('.pg.on .rv:not(.vi)').forEach(x=>o.observe(x))},30)}
+$('#team').innerHTML=`<h2>Support team</h2><div class="grid">${T.map(card).join('')}</div>`;
+$('#show').innerHTML=`<h2>Showcase</h2><div class="grid">${SH.map((s,i)=>`<a class="sc" ${s.link?`target="_blank" rel="noopener" href="${u(s.link)}"`:''}>${s.img?`<img src="${e(s.img)}" alt="${e(s.title)}">`:`<div class="ini">${i+1}</div>`}<b>${e(s.title)}</b></a>`).join('')||'<p>Showcase-e ekhono kichu nei.</p>'}</div>`;
+$$('[data-chat]').forEach(b=>b.onclick=()=>{cur=b.dataset.chat;location.hash='#chat'})}
+const BOT={id:'bot',name:'Assistant',role:'Instant answers',status:'available'};let bm=[];
+const ans=q=>{const s=q.toLowerCase(),h=FQ.find(f=>f.k.split(',').some(w=>w.trim()&&s.includes(w.trim())));return h?h.a:'Eta amar basic Q&A-r baire. Upor theke kono team member select kore chat korun.'};
+function chat(){un();const L=[BOT,...T],m=L.find(x=>x.id==cur)||BOT;cur=m.id;const bot=m.id=='bot',sid=vid+'-'+m.id;
+$('#chat').innerHTML=`<h2>Chat</h2><div class="pick">${L.map(x=>`<button class="pk ${x.id==cur?'on':''}" data-p="${e(x.id)}">${e(x.name.split(' ')[0])}</button>`).join('')}</div><div class="card"><b>${e(m.name)}</b> <small>${bot?'Instant FAQ answers':(STATUS[m.status]||[''])[0]}</small><div class="msgs" id="ms"></div><div class="acts"><input id="mi" placeholder="Message likhun..."><button id="sd">Send</button></div></div>`;
+$$('[data-p]').forEach(b=>b.onclick=()=>{cur=b.dataset.p;chat()});
+const show=d=>{const x=$('#ms');if(!x)return;x.innerHTML=d.map(y=>`<div class="m ${y.from=='visitor'?'me':''}">${e(y.text)}</div>`).join('')||'<small>Prothom message likhun.</small>';x.scrollTop=1e9};
+if(bot)show(bm);else un=watch(sid,show);
+const go=async()=>{const i=$('#mi'),t=i.value.trim();if(!t)return;i.value='';if(bot){bm.push({from:'visitor',text:t},{from:'bot',text:ans(t)});return show(bm)}const n=localStorage.snk_vn||(localStorage.snk_vn=prompt('Apnar naam?')||'Guest');try{await send(sid,{member:m.name,mid:m.id,text:t,from:'visitor',by:n})}catch(x){alert('Message pathano gelo na.')}};
+$('#sd').onclick=go;$('#mi').onkeydown=x=>x.key=='Enter'&&go()}
+function route(){let h=(location.hash||'#home').slice(1);if(!['home','team','chat','show'].includes(h))h='home';$$('.pg').forEach(p=>p.classList.toggle('on',p.id==h));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+h));if(h=='chat')chat();else un();scrollTo(0,0)}
 addEventListener('hashchange',route);
 addEventListener('beforeinstallprompt',x=>{x.preventDefault();dp=x;const b=$('#ins');if(b){b.hidden=0;b.onclick=()=>dp.prompt()}});
-/* ---- Admin ---- */
-const gp=(o,p)=>p.split('.').reduce((a,k)=>a?.[k],o);
-function set(p,v){if(p=='chart.l')v=v.split(',').map(s=>s.trim());if(p=='chart.v')v=v.split(',').map(Number);const k=p.split('.'),l=k.pop();k.reduce((a,x)=>a[x],W)[l]=v}
-const F=(p,t)=>{let v=gp(W,p);if(Array.isArray(v))v=v.join(', ');return`<label>${t}<input value="${e(v)}" oninput="set('${p}',this.value)"></label>`};
-const P=(p,t)=>`<label>${t}<input type="file" accept="image/*" onchange="pic('${p}',this)"></label>${gp(W,p)?`<img src="${e(gp(W,p))}" alt="" style="height:64px;border-radius:12px;margin-bottom:8px">`:''}`;
-function pic(p,el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,700/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);set(p,c.toDataURL('image/jpeg',.8));form()};i.src=r.result};r.readAsDataURL(f)}
-function form(){const y=$('#adm').scrollTop;$('#adm').innerHTML=`<div class="abar"><b>⚙ Admin dashboard</b><span><button class="btn" onclick="save()">💾 Save</button> <button class="btn g" onclick="adm(0)">✖</button></span></div><div class="af">
-<h3>Site</h3>${F('name','Site naam')}${P('logo','Logo')}${F('pass','Admin password')}
-<h3>Hero section</h3>${F('hero.t','Title')}${F('hero.s','Subtitle')}${P('hero.img','Background chobi')}
-<h3>Support team</h3>${W.team.map((m,i)=>`<div class="card">${F(`team.${i}.n`,'Naam')}${F(`team.${i}.r`,'Role')}${F(`team.${i}.wa`,'WhatsApp number (88017...)')}${F(`team.${i}.ph`,'Call number')}${F(`team.${i}.em`,'Email')}${P(`team.${i}.img`,'Profile chobi')}<label><input type="checkbox" ${m.on?'checked':''} onchange="set('team.${i}.on',this.checked?1:0)">Online</label><button class="btn g" onclick="del('team',${i})">🗑 Delete</button></div>`).join('')}<button class="btn" onclick="add('team')">+ Add member</button>
-<h3>Showcase</h3>${W.show.map((s,i)=>`<div class="card">${F(`show.${i}.t`,'Title')}${P(`show.${i}.img`,'Chobi')}<button class="btn g" onclick="del('show',${i})">🗑 Delete</button></div>`).join('')}<button class="btn" onclick="add('show')">+ Add item</button>
-<h3>Chart</h3>${F('chart.title','Title')}${F('chart.l','Labels (comma diye)')}${F('chart.v','Values (comma diye)')}
-<h3>Team meeting</h3>${F('meet.topic','Topic')}${F('meet.link','Meet / Zoom / WhatsApp group link')}${F('fb','Firebase Database URL (live group chat)')}
-<h3>Backup</h3><button class="btn g" onclick="exp()">⬇ Export</button> <label class="btn g" style="display:inline-flex">⬆ Import<input type="file" hidden onchange="imp(this)"></label> <button class="btn g" onclick="rst()">Reset</button></div>`;$('#adm').scrollTop=y}
-function add(k){W[k].push(k=='team'?{n:'New member',r:'Support',img:'',wa:'',ph:'',em:'',on:1}:{t:'New item',img:''});form()}
-function del(k,i){W[k].splice(i,1);form()}
-function adm(o){if(o){if(prompt('Admin password')!==S.pass)return;W=structuredClone(S);form()}$('#adm').style.display=o?'block':'none'}
-function save(){S=W;try{localStorage.setItem('sts',JSON.stringify(S))}catch(x){alert('Storage full. Chobi choto korun.');return}render();route();adm(0)}
-function exp(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(W)],{type:'application/json'}));a.download='data.json';a.click()}
-function imp(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{W=Object.assign({},D,JSON.parse(r.result));form()}catch(x){alert('File thik nei.')}};r.readAsText(f)}
-function rst(){if(confirm('Sob edit muche default-e jabe. Thik ache?')){localStorage.removeItem('sts');location.reload()}}
-$('#ad').onclick=x=>{x.preventDefault();adm(1)};
-render();route();
-fetch('data.json').then(r=>r.ok?r.json():0).then(d=>{if(d&&!localStorage.getItem('sts')){S=Object.assign({},D,d);render();route()}}).catch(()=>{});
+try{[S,T,FQ,SH]=await Promise.all([getSettings(),list('team'),list('faq'),list('showcase').catch(()=>[])])}catch(x){console.error(x)}
+SH=SH||[];draw();route();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

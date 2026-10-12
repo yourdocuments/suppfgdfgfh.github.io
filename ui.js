@@ -1,0 +1,8 @@
+export const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+export const u=x=>/^https?:\/\//i.test(x||'')?e(x):'#';
+export const wa=p=>'https://wa.me/'+String(p||'').replace(/\D/g,'');
+export const pic=(f,max=600,ty='image/jpeg')=>new Promise(r=>{const fr=new FileReader();fr.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);r(c.toDataURL(ty,.78))};i.src=fr.result};fr.readAsDataURL(f)});
+export function chart(l,v){const w=600,h=240,p=30,mx=Math.max(...v,1),bw=(w-p*2)/v.length;let b='',pt=[];
+v.forEach((x,i)=>{const H=(h-p*2)*x/mx,X=p+i*bw+bw*.15,Y=h-p-H,cx=X+bw*.35;b+=`<rect class="bar" style="animation-delay:${i*.09}s" x="${X}" y="${Y}" width="${bw*.7}" height="${H}" rx="8" fill="url(#g)"/><text x="${cx}" y="${Y-7}" text-anchor="middle" fill="#eaf5e6" font-size="12" font-weight="700">${x}</text><text x="${cx}" y="${h-8}" text-anchor="middle" fill="#85a08c" font-size="12">${e(l[i]||'')}</text>`;pt.push(cx+','+Y)});
+return`<svg viewBox="0 0 ${w} ${h}" width="100%"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aeff32"/><stop offset="1" stop-color="#1f5a2a"/></linearGradient></defs>${b}<polyline class="ln" pathLength="1" points="${pt.join(' ')}" fill="none" stroke="#ffc857" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
