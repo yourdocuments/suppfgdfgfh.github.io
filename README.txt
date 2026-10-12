@@ -19,3 +19,8 @@ APK
 - Repo-te push korle GitHub > Actions > "Build APK" auto chole.
 - Shesh hole oi run-er "Artifacts" theke support-team-apk download korun (app-debug.apk).
 - Alternative: pwabuilder.com-e site link diye Android APK banano jay.
+
+PURANO ADMIN / DASHBOARD REPLACE KORA
+- Repo theke ager admin/ folder-er sob file DELETE korun, tarpor ei zip-er admin/ folder upload korun.
+- Notun admin ekhon main site-er moddhei. /admin/ link khulle auto notun admin-e jabe.
+- Purano design dekhale: browser-e Site data / cache clear korun (ba Ctrl+Shift+R).
