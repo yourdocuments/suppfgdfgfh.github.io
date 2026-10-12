@@ -1,9 +1,9 @@
 // Firebase live mode. Key khali korle DEMO mode (shudhu ei browser-e save hoy).
 export const firebaseConfig={
-  apiKey:"AIzaSyAqwHTTTNIvabd0GhkXI8fyxfbbyagqixI",
-  authDomain:"websitedealteam.firebaseapp.com",
-  projectId:"websitedealteam",
-  storageBucket:"websitedealteam.firebasestorage.app",
-  messagingSenderId:"275886355163",
-  appId:"1:275886355163:web:4469d9e9c6442ea3f012fe"
+  apiKey:"AIzaSyDHb2-YgWJoIr86rtmdpsqzR5C7IPMRJQU",
+  authDomain:"supportwebsitesdeal.firebaseapp.com",
+  projectId:"supportwebsitesdeal",
+  storageBucket:"supportwebsitesdeal.firebasestorage.app",
+  messagingSenderId:"33805451818",
+  appId:"1:33805451818:web:43e16fddf67555a65db953"
 };

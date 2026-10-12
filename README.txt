@@ -23,3 +23,12 @@ PREMIUM SUPPORT
 - Screen share shudhu desktop browser-e (Chrome/Edge/Firefox). Phone-e screenshot ba video call.
 - firebase/data.js-e send() e img/kind/issue/site add kora hoyeche; apnar data.js-e ei ek line bodle nite hobe (ba ei zip-er data.js use korun).
 - firestore.rules abar Publish korun (rtc rule add hoyeche).
+
+V3 - NOTUN FEATURE
+- Ticket number (T-XXXXX) + status Open/Working/Solved, customer rating, auto-reply (office time baire), quick replies, chat transfer.
+- Inbox-e unread count + beep + browser notification (control room tab khola thakle).
+- Dashboard: real chart (7 din-er chat), ticket stats, beshi problem kon site-e, site click, Backup JSON, 'Home chart-e publish'.
+- Site: Bangla/English toggle, Dark/Light, Websites page-e search, WhatsApp preview card (OG).
+- Settings-e notun field: Office open/close hour, Auto reply, Quick replies.
+- firestore.rules + firebase/data.js abar update korun.
+- Ei version-e nei (paid/server lage): push notification jokhon tab bondho, TURN server, 2-step login, in-app video call, PDF upload, site screenshot thumbnail.
