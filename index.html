@@ -1,20 +1,25 @@
-<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#060c09"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><title>Support</title><link rel="stylesheet" href="app.css"></head><body>
+<!DOCTYPE html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#060c09"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Support"><title>Support</title><link rel="stylesheet" href="app.css"></head><body>
 <header><div class="lg" id="lg"></div></header>
+<div id="ib" hidden><span>📲 <b>App install korun</b><small> · home screen-e icon, full screen</small></span><div class="hb"><button class="btn" id="ig">Install</button><a class="btn g" id="ia" hidden>Android APK</a><button class="btn g" id="ix" aria-label="Close">✕</button></div></div>
 <nav><a href="#home"><b>🏠</b>Home</a><a href="#team"><b>👥</b>Support Team</a><a href="#chat"><b>💬</b>Chat</a><a href="#show"><b>🖼</b>Showcase</a></nav>
-<main><section class="pg" id="home"></section><section class="pg" id="team"></section><section class="pg" id="chat"></section><section class="pg" id="show"></section><footer><a href="admin/">⚙ Admin login</a></footer></main>
+<main><section class="pg" id="home"></section><section class="pg" id="team"></section><section class="pg" id="chat"></section><section class="pg" id="show"></section><footer><span id="fn"></span></footer></main>
+<div id="vw" hidden><div class="vb"><button class="btn g" id="vx">← Back</button><b id="vt"></b><a class="btn g" id="vo" target="_blank" rel="noopener">Browser ↗</a></div><iframe id="vf" title="Website" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe></div>
+<dialog id="ih"></dialog>
 <script type="module">
 import {getSettings,list,send,watch,STATUS} from './firebase/data.js';
 import {e,$,$$,u,wa,chart} from './ui.js';
+const SITES=[['offers','🎁','Offers'],['package','📦','Packages'],['pk','🇵🇰','Pakistan'],['bd','🇧🇩','Bangladesh'],['sa','🇸🇦','Saudi Arabia'],['id','🇮🇩','Indonesia'],['my','🇲🇾','Malaysia'],['uk','🇬🇧','United Kingdom'],['live','🟢','Live']].map(([h,icon,title])=>({title,icon,link:`https://${h}.websitesdeal.com`}));
+const hx=x=>/^#[0-9a-f]{3,8}$/i.test(x||'');
 let S={},T=[],FQ=[],SH=[],cur,un=()=>{},dp;
 const vid=localStorage.snk_vid||(localStorage.snk_vid=Math.random().toString(36).slice(2,10));
 const ini=m=>m.photo?`<img class="ph" src="${e(m.photo)}" alt="${e(m.name)}">`:`<div class="ini">${e((m.name||'?')[0])}</div>`;
 const card=m=>{const[lb,co]=STATUS[m.status]||STATUS.offline;return`<div class="mem"><div class="pw">${ini(m)}<span class="st" style="--c:${co}">${lb}</span></div><div class="mi"><h3>${e(m.name)}</h3><small>${e(m.role)}</small><p>${e(m.blurb)}</p>${m.statusNote?`<p class="nt">${e(m.statusNote)}</p>`:''}<div class="acts">${m.phone?`<a target="_blank" rel="noopener" href="${wa(m.phone)}">WhatsApp</a><a href="tel:${e(m.phone)}">📞 Call</a>`:''}${m.email?`<a href="mailto:${e(m.email)}">✉ Email</a>`:''}<button data-chat="${e(m.id)}">💬 Chat</button></div></div></div>`};
-function draw(){document.title=S.name||'Support';$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
+function draw(){document.title=S.name||'Support';$('#fn').textContent=(S.name||'')+' © '+new Date().getFullYear();$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
 const l=(S.chL||'Jan,Feb,Mar,Apr,May,Jun').split(',').map(x=>x.trim()),v=(S.chV||'40,65,52,90,78,120').split(',').map(Number),sum=v.reduce((a,b)=>a+b,0);
-$('#home').innerHTML=`<div class="hero" ${S.heroI?`style="background-image:linear-gradient(#060c09b3,#060c09f0),url('${e(S.heroI)}')"`:''}><h1>${e(S.heroT||S.name)}</h1><p>${e(S.heroS||S.tagline)}</p><div class="hb"><a class="btn" href="#chat">💬 Chat now</a>${S.phone?`<a class="btn g" target="_blank" rel="noopener" href="${wa(S.phone)}">WhatsApp</a>`:''}<a class="btn g" href="#team">Meet the team</a><button class="btn g" id="ins" hidden>⬇ Install app</button>${S.apkUrl?`<a class="btn g" href="${u(S.apkUrl)}">🤖 Download APK</a>`:''}</div></div><div class="card"><h3>${e(S.chT||'Tickets solved')}</h3><div class="kp"><div><b>${sum}</b><small>Total</small></div><div><b>${Math.max(...v)}</b><small>Best</small></div><div><b>${v.length>1&&v[0]?Math.round((v[v.length-1]-v[0])/v[0]*100):0}%</b><small>Growth</small></div></div>${chart(l,v)}</div>`;
-if(dp){$('#ins').hidden=0;$('#ins').onclick=()=>dp.prompt()}
+$('#home').innerHTML=`<div class="hero" style="${hx(S.heroC)?'--c1:'+S.heroC+';':''}${hx(S.heroG)?'--c2:'+S.heroG+';':''}${S.heroI?`background-image:linear-gradient(#0000008c,#0000008c),url('${e(S.heroI)}');background-size:cover;background-position:center;`:''}"><a class="pill" href="#show">${e(S.heroB||('🌐 '+SITES.length+'ta website · Dekhun'))}<span class="ar">→</span></a><h1>${e(S.heroT||S.name)}</h1><p>${e(S.heroS||S.tagline)}</p><div class="hb"><a class="cta" href="#chat">💬 Chat now</a><a class="cta g" href="#team">Meet the team</a>${S.phone?`<a class="cta g" target="_blank" rel="noopener" href="${wa(S.phone)}">WhatsApp</a>`:''}${S.apkUrl?`<a class="cta g" href="${u(S.apkUrl)}">🤖 APK</a>`:''}</div></div><div class="card"><h3>${e(S.chT||'Tickets solved')}</h3><div class="kp"><div><b>${sum}</b><small>Total</small></div><div><b>${Math.max(...v)}</b><small>Best</small></div><div><b>${v.length>1&&v[0]?Math.round((v[v.length-1]-v[0])/v[0]*100):0}%</b><small>Growth</small></div></div>${chart(l,v)}</div>`;
+if(S.logo){$('link[rel=icon]').href=S.logo;$('link[rel=apple-touch-icon]').href=S.logo}
 $('#team').innerHTML=`<h2>Support team</h2><div class="grid">${T.map(card).join('')}</div>`;
-$('#show').innerHTML=`<h2>Showcase</h2><div class="grid">${SH.map((s,i)=>`<a class="sc" ${s.link?`target="_blank" rel="noopener" href="${u(s.link)}"`:''}>${s.img?`<img src="${e(s.img)}" alt="${e(s.title)}">`:`<div class="ini">${i+1}</div>`}<b>${e(s.title)}</b></a>`).join('')||'<p>Showcase-e ekhono kichu nei.</p>'}</div>`;
+$('#show').innerHTML=`<h2>Our websites</h2><p style="color:var(--mu);margin-top:6px">Amader sob website ek jaygay. Apnar desh ba dorkar onujayi khule nin.</p><div class="grid">${[...SITES,...SH].map(s=>`<a class="site" data-v="1" data-t="${e(s.title)}" href="${u(s.link)}"><span class="ic">${s.img?`<img src="${e(s.img)}" alt="">`:e(s.icon||(s.title||'?')[0])}</span><b>${e(s.title)}</b><small>${e(String(s.link||'').replace(/^https?:\/\//,''))}</small><span class="go">Dekhun ›</span></a>`).join('')}</div>`;
 $$('[data-chat]').forEach(b=>b.onclick=()=>{cur=b.dataset.chat;location.hash='#chat'})}
 const BOT={id:'bot',name:'Assistant',role:'Instant answers',status:'available'};let bm=[];
 const ans=q=>{const s=q.toLowerCase(),h=FQ.find(f=>f.k.split(',').some(w=>w.trim()&&s.includes(w.trim())));return h?h.a:'Eta amar basic Q&A-r baire. Upor theke kono team member select kore chat korun.'};
@@ -27,8 +32,19 @@ const go=async()=>{const i=$('#mi'),t=i.value.trim();if(!t)return;i.value='';if(
 $('#sd').onclick=go;$('#mi').onkeydown=x=>x.key=='Enter'&&go()}
 function route(){let h=(location.hash||'#home').slice(1);if(!['home','team','chat','show'].includes(h))h='home';$$('.pg').forEach(p=>p.classList.toggle('on',p.id==h));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+h));if(h=='chat')chat();else un();scrollTo(0,0)}
 addEventListener('hashchange',route);
-addEventListener('beforeinstallprompt',x=>{x.preventDefault();dp=x;const b=$('#ins');if(b){b.hidden=0;b.onclick=()=>dp.prompt()}});
+const sa=matchMedia('(display-mode: standalone)').matches||navigator.standalone,ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+function bar(){if(sa||Date.now()<(+localStorage.snk_ib||0))return;$('#ib').hidden=false;if(S.apkUrl&&!ios){$('#ia').href=u(S.apkUrl);$('#ia').hidden=false}}
+$('#ig').onclick=async()=>{if(dp){dp.prompt();await dp.userChoice;dp=null;$('#ib').hidden=true;return}
+$('#ih').innerHTML=`<h3>App install korun</h3><ol style="margin:14px 0 14px 20px;line-height:1.9">${ios?'<li>Safari-te site-ta kholun</li><li>Niche <b>Share</b> (⬆) chapun</li><li><b>Add to Home Screen</b> chapun</li><li><b>Add</b> chapun</li>':'<li>Browser-er <b>⋮</b> menu chapun</li><li><b>Install app</b> ba <b>Add to Home screen</b> chapun</li><li><b>Install</b> chapun</li>'}</ol><form method="dialog"><button class="btn">Bujhlam</button></form>`;$('#ih').showModal()};
+$('#ix').onclick=()=>{localStorage.snk_ib=Date.now()+6048e5;$('#ib').hidden=true};
+addEventListener('beforeinstallprompt',x=>{x.preventDefault();dp=x});
+addEventListener('appinstalled',()=>{$('#ib').hidden=true});
+function view(h,t){$('#vt').textContent=t;$('#vo').href=h;$('#vf').src=h;$('#vw').hidden=false;document.body.style.overflow='hidden'}
+const shut=()=>{$('#vw').hidden=true;$('#vf').src='about:blank';document.body.style.overflow=''};
+$('#vx').onclick=shut;addEventListener('keydown',x=>x.key=='Escape'&&shut());
+$('#show').addEventListener('click',ev=>{const a=ev.target.closest('[data-v]');if(a){ev.preventDefault();view(a.href,a.dataset.t)}});
+let tp=0,tt;$('#lg').onclick=()=>{tp++;clearTimeout(tt);tt=setTimeout(()=>tp=0,1500);if(tp>=5)location.href=['ops','k7x2q'].join('-')+'/'};
 try{[S,T,FQ,SH]=await Promise.all([getSettings(),list('team'),list('faq'),list('showcase').catch(()=>[])])}catch(x){console.error(x)}
-SH=SH||[];draw();route();
+SH=SH||[];draw();bar();route();
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>

@@ -1,1 +1,48 @@
-{"name":"Support Team","short_name":"Support","start_url":"./","display":"standalone","background_color":"#060c09","theme_color":"#060c09","icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+{
+ "id": "./",
+ "name": "Support Team",
+ "short_name": "Support",
+ "description": "Support team, live chat ar amader sob website",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#060c09",
+ "theme_color": "#060c09",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Chat",
+   "url": "./#chat"
+  },
+  {
+   "name": "Support Team",
+   "url": "./#team"
+  }
+ ]
+}
