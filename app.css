@@ -40,14 +40,3 @@ footer{text-align:center;padding:24px;color:var(--mu);font-size:14px}
 :focus-visible{outline:3px solid var(--ac);outline-offset:2px}
 @media(min-width:800px){nav{top:calc(8px + env(safe-area-inset-top));bottom:auto;left:auto;right:18px;background:none;border:0;padding:0}nav a{padding:9px 16px;font-size:15px}nav a b{display:none}body{padding-bottom:0}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
-.pg.on{animation:pin .45s ease}@keyframes pin{from{opacity:0;transform:translateY(10px)}}
-.on{display:flex;align-items:center;gap:0;margin-top:6px}.on small{margin-left:22px;color:#c9ddc9}
-.oa{width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid var(--ac);margin-right:-12px;background:var(--sf)}
-.oa .ph,.oa .ini{aspect-ratio:1;width:100%;height:100%;font-size:18px;object-fit:cover}
-.site{position:relative;background:var(--sf);border:1px solid #ffffff14;border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:4px;transition:transform .2s,border-color .2s}
-.site:hover{transform:translateY(-4px);border-color:var(--ac)}
-.site .ic{width:54px;height:54px;border-radius:16px;background:#ffffff0f;display:grid;place-items:center;font-size:28px;overflow:hidden;margin-bottom:8px}.site .ic img{width:100%;height:100%;object-fit:cover}
-.site b{font:700 19px Georgia,serif}.site small{color:var(--mu);word-break:break-all}
-.site .go{margin-top:10px;color:var(--ac);font-weight:700;font-size:14px}
-.mem{border:1px solid #ffffff10}.card{border:1px solid #ffffff10}
-footer{border-top:1px solid #ffffff10;margin-top:30px}
