@@ -16,3 +16,10 @@ UPLOAD
 
 APK: push korle GitHub > Actions > Build APK > Artifacts > app-debug.apk
 Cache atke thakle Ctrl+Shift+R.
+
+PREMIUM SUPPORT
+- Customer chat-e 'Problem report' form (website + purchase/website issue + contact), 📎 screenshot, 🖥 screen share.
+- Team control room > Inbox > chat khule 'Screen share chai' > customer Allow dile 'Screen dekhun'.
+- Screen share shudhu desktop browser-e (Chrome/Edge/Firefox). Phone-e screenshot ba video call.
+- firebase/data.js-e send() e img/kind/issue/site add kora hoyeche; apnar data.js-e ei ek line bodle nite hobe (ba ei zip-er data.js use korun).
+- firestore.rules abar Publish korun (rtc rule add hoyeche).

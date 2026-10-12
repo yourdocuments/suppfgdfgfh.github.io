@@ -4,8 +4,9 @@
 import {getSettings,saveSettings,list,save,del,STATUS,send,watch,watchThreads} from '../firebase/data.js';
 import {login,session,logout,reset,createStaff} from '../firebase/auth.js';
 import {e,$,u,pic} from '../ui.js';
+import {view} from '../rtc.js';
 const A=$('#app'),R=[],NEW={team:{name:'New member',role:'',blurb:'',phone:'',email:'',photo:'',status:'available',statusNote:''},faq:{k:'keyword1,keyword2',a:'Answer'},showcase:{title:'New item',img:'',link:''}};
-let ss,tab,K={},name='Admin',subs=[],tsub=()=>{},cs=null;
+let ss,tab,K={},name='Admin',subs=[],tsub=()=>{},cs=null,stopV=()=>{};
 const reg=o=>R.push(o)-1;
 const load=async c=>K[c]||(K[c]=c=='s'?await getSettings():(await list(c).catch(()=>[]))||[]);
 function fld(o,k,t,type){const d=`data-o="${reg(o)}" data-k="${k}"`;
@@ -22,13 +23,13 @@ if(tab=='team'){const T=await load('team');return T.map(m=>{const i=reg(m);retur
 if(tab=='faq'){const F=await load('faq');return F.map(f=>`<div class="card">${fld(f,'k','Keywords (comma diye)')}${fld(f,'a','Answer','a')}${btns('faq',f)}</div>`).join('')+`<button class="btn" data-a="ad" data-c="faq" style="margin-top:18px">+ Add FAQ</button>`}
 if(tab=='showcase'){const H=await load('showcase');return H.map(s=>`<div class="card">${fld(s,'title','Title')}${fld(s,'img','Chobi','i')}${fld(s,'link','Link (optional)')}${btns('showcase',s)}</div>`).join('')+`<button class="btn" data-a="ad" data-c="showcase" style="margin-top:18px">+ Add item</button>`}
 if(tab=='me'){const T=await load('team'),m=T.find(x=>x.id==ss.mid);if(!m)return'<div class="card">Profile pawa jayni.</div>';return`<div class="card"><h3>${e(m.name)}</h3>${fld(m,'status','Status','s')}${fld(m,'statusNote','Status note')}<button class="btn" data-a="sv" data-c="team" data-i="${reg(m)}">💾 Save</button></div>`}
-if(tab=='inbox')return`<div class="card"><h3>Chats</h3><div id="th"></div></div><div class="card" id="tp" hidden><b id="tt"></b><div class="msgs" id="tm"></div><div class="acts"><input id="ri" placeholder="Reply..."><button data-a="rp">Send</button></div></div>`;
+if(tab=='inbox')return`<div class="card"><h3>Chats</h3><div id="th"></div></div><div class="card" id="tp" hidden><b id="tt"></b><div class="hb" style="margin:8px 0"><button class="btn g" data-a="rq">🖥 Screen share chai</button><button class="btn g" data-a="vw">👁 Screen dekhun</button><button class="btn g" data-a="vs">⏹ Stop</button></div><video id="sv" autoplay playsinline controls hidden style="width:100%;border-radius:14px;background:#000"></video><div class="msgs" id="tm"></div><div class="acts"><input id="ri" placeholder="Reply..."><button data-a="rp">Send</button></div></div>`;
 if(tab=='room'){const S=await load('s');return`<div class="card"><h3>${e(S.meetTopic||'Team meeting')}</h3>${S.meetLink?`<a class="btn" target="_blank" rel="noopener" href="${u(S.meetLink)}">🎥 Join meeting</a>`:''}<div class="msgs" id="rm"></div><div class="acts"><input id="rmi" placeholder="Team-ke likhun..."><button data-a="mr">Send</button></div></div>`}}
-async function draw(){subs.forEach(f=>f());subs=[];tsub();R.length=0;const sup=ss.role=='super',tabs=sup?[['dash','Dashboard'],['settings','Settings'],['team','Team'],['faq','FAQ'],['showcase','Websites'],['inbox','Inbox'],['room','Meeting']]:[['me','My status'],['inbox','Inbox'],['room','Meeting']];tab=tab||tabs[0][0];
+async function draw(){subs.forEach(f=>f());subs=[];tsub();stopV();R.length=0;const sup=ss.role=='super',tabs=sup?[['dash','Dashboard'],['settings','Settings'],['team','Team'],['faq','FAQ'],['showcase','Websites'],['inbox','Inbox'],['room','Meeting']]:[['me','My status'],['inbox','Inbox'],['room','Meeting']];tab=tab||tabs[0][0];
 const h=await body();A.innerHTML=`<div class="abar"><b>⚙ ${sup?'Owner':e(name)}</b><span><a class="btn g" href="../index.html">Site</a> <button class="btn g" data-a="out">Logout</button></span></div><div class="tabs">${tabs.map(([k,t])=>`<button class="btn ${k==tab?'':'g'}" data-t="${k}">${t}</button>`).join('')}</div><div class="af">${h}</div>`;
-if(tab=='inbox')subs.push(watchThreads(d=>{const x=$('#th');if(x)x.innerHTML=d.filter(y=>!/^room/.test(y.sid)).map(y=>`<div class="m" data-a="th" data-s="${e(y.sid)}" data-n="${e(y.by||'Visitor')}" style="cursor:pointer;max-width:100%"><b>${e(y.by||'Visitor')}</b>→ ${e(y.member||'')}<br><small>${e(y.last)}</small></div>`).join('')||'<small>Kono chat nei.</small>'},sup?undefined:ss.mid));
+if(tab=='inbox')subs.push(watchThreads(d=>{const x=$('#th');if(x)x.innerHTML=d.filter(y=>!/^room/.test(y.sid)).map(y=>`<div class="m" data-a="th" data-s="${e(y.sid)}" data-n="${e(y.by||'Visitor')}" style="cursor:pointer;max-width:100%"><b>${e(y.by||'Visitor')}</b>→ ${e(y.member||'')}<br><small>${e(y.last)}</small>${y.issue?`<br><small style="color:var(--ac)">${e(y.issue)} · ${e(y.site||'')}</small>`:''}</div>`).join('')||'<small>Kono chat nei.</small>'},sup?undefined:ss.mid));
 if(tab=='room')subs.push(watch('room-team',d=>{const x=$('#rm');if(x){x.innerHTML=d.map(y=>`<div class="m"><b>${e(y.by)}</b>${e(y.text)}</div>`).join('')||'<small>Ekhono message nei.</small>';x.scrollTop=1e9}}))}
-function openT(s,n){tsub();cs=s;$('#tp').hidden=false;$('#tt').textContent=n;tsub=watch(s,d=>{const x=$('#tm');if(x&&cs==s){x.innerHTML=d.map(y=>`<div class="m ${y.from=='staff'?'me':''}">${e(y.text)}</div>`).join('');x.scrollTop=1e9}})}
+function openT(s,n){tsub();cs=s;$('#tp').hidden=false;$('#tt').textContent=n;tsub=watch(s,d=>{const x=$('#tm');if(x&&cs==s){x.innerHTML=d.map(y=>`<div class="m ${y.from=='staff'?'me':''}">${e(y.text)}${y.img?`<img src="${e(y.img)}" alt="">`:''}</div>`).join('');x.scrollTop=1e9}})}
 A.addEventListener('input',ev=>{const t=ev.target,k=t.dataset.k;if(k&&t.type!='file')R[t.dataset.o][k]=t.value});
 A.addEventListener('change',async ev=>{const t=ev.target,k=t.dataset.k;if(k&&t.type=='file'&&t.files[0]){R[t.dataset.o][k]=await pic(t.files[0],k=='heroI'?900:600,k=='logo'?'image/png':'image/jpeg');draw()}});
 A.onclick=async ev=>{const b=ev.target.closest('[data-a],[data-t]');if(!b)return;const d=b.dataset,o=R[d.i];
@@ -43,6 +44,9 @@ if(d.a=='ad'){await save(d.c,{...NEW[d.c]});delete K[d.c];return draw()}
 if(d.a=='mk'){await createStaff($('#se'+d.i).value.trim(),$('#sp'+d.i).value,o.id);return alert('Staff login created')}
 if(d.a=='th')return openT(d.s,d.n);
 if(d.a=='rp'){const i=$('#ri'),t=i.value.trim();if(t&&cs){i.value='';await send(cs,{text:t,from:'staff',by:name})}return}
+if(d.a=='rq'){if(cs)await send(cs,{text:'🖥 Amader team apnar screen dekhte chaiche. Allow chapun.',from:'staff',by:name,kind:'req'});return}
+if(d.a=='vw'){if(!cs)return;stopV();const v=$('#sv');v.hidden=false;stopV=await view(cs,v,()=>{v.hidden=true});return}
+if(d.a=='vs'){stopV();$('#sv').hidden=true;return}
 if(d.a=='mr'){const i=$('#rmi'),t=i.value.trim();if(t){i.value='';await send('room-team',{text:t,from:'staff',by:name})}}
 }catch(x){alert(x.message)}};
 async function init(){ss=await session();if(!ss)return loginUI();tab=null;K={};if(ss.role=='member')name=(await load('team')).find(x=>x.id==ss.mid)?.name||'Staff';draw()}

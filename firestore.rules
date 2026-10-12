@@ -11,5 +11,6 @@ service cloud.firestore{match /databases/{d}/documents{
  match /staff/{u}{allow read:if admin()||request.auth.uid==u;allow write:if admin();}
  match /threads/{s}{allow read:if admin()||(staff()&&me().memberId==resource.data.mid);allow create:if true;
   allow update:if !('mid' in resource.data)||request.resource.data.mid==resource.data.mid;allow delete:if admin();
+  match /rtc/{r}{allow read,delete:if true;allow create,update:if request.resource.data.keys().hasOnly(['offer','answer','t']);}
   match /msgs/{m}{allow read,create:if !s.matches('room.*')||admin()||staff();allow update,delete:if admin();}}
 }}

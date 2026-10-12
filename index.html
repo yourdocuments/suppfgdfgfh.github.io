@@ -6,12 +6,13 @@
 <div id="vw" hidden><div class="vb"><button class="btn g" id="vx">← Back</button><b id="vt"></b><a class="btn g" id="vo" target="_blank" rel="noopener">Browser ↗</a></div><iframe id="vf" title="Website" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe></div>
 <dialog id="ih"></dialog>
 <script type="module">
-import {getSettings,list,send,watch,STATUS} from './firebase/data.js';
-import {e,$,$$,u,wa,chart} from './ui.js';
+import {getSettings,list,send,watch,STATUS,live} from './firebase/data.js';
+import {share} from './rtc.js';
+import {e,$,$$,u,wa,chart,pic} from './ui.js';
 const SITES=[['offers','🎁','Offers'],['package','📦','Packages'],['pk','🇵🇰','Pakistan'],['bd','🇧🇩','Bangladesh'],['sa','🇸🇦','Saudi Arabia'],['id','🇮🇩','Indonesia'],['my','🇲🇾','Malaysia'],['uk','🇬🇧','United Kingdom'],['live','🟢','Live']].map(([h,icon,title])=>({title,icon,link:`https://${h}.websitesdeal.com`}));
 const hx=x=>/^#[0-9a-f]{3,8}$/i.test(x||'');
 let S={},T=[],FQ=[],SH=[],cur,un=()=>{},dp;
-const vid=localStorage.snk_vid||(localStorage.snk_vid=Math.random().toString(36).slice(2,10));
+const vid=localStorage.snk_vid||(localStorage.snk_vid=crypto.randomUUID?.()||Math.random().toString(36).slice(2)+Date.now().toString(36));
 const ini=m=>m.photo?`<img class="ph" src="${e(m.photo)}" alt="${e(m.name)}">`:`<div class="ini">${e((m.name||'?')[0])}</div>`;
 const card=m=>{const[lb,co]=STATUS[m.status]||STATUS.offline;return`<div class="mem"><div class="pw">${ini(m)}<span class="st" style="--c:${co}">${lb}</span></div><div class="mi"><h3>${e(m.name)}</h3><small>${e(m.role)}</small><p>${e(m.blurb)}</p>${m.statusNote?`<p class="nt">${e(m.statusNote)}</p>`:''}<div class="acts">${m.phone?`<a target="_blank" rel="noopener" href="${wa(m.phone)}">WhatsApp</a><a href="tel:${e(m.phone)}">📞 Call</a>`:''}${m.email?`<a href="mailto:${e(m.email)}">✉ Email</a>`:''}<button data-chat="${e(m.id)}">💬 Chat</button></div></div></div>`};
 function draw(){document.title=S.name||'Support';$('#fn').textContent=(S.name||'')+' © '+new Date().getFullYear();$('#lg').innerHTML=(S.logo?`<img src="${e(S.logo)}" alt="">`:'<i>S</i>')+e(S.name);
@@ -23,12 +24,25 @@ $('#show').innerHTML=`<h2>Our websites</h2><p style="color:var(--mu);margin-top:
 $$('[data-chat]').forEach(b=>b.onclick=()=>{cur=b.dataset.chat;location.hash='#chat'})}
 const BOT={id:'bot',name:'Assistant',role:'Instant answers',status:'available'};let bm=[];
 const ans=q=>{const s=q.toLowerCase(),h=FQ.find(f=>f.k.split(',').some(w=>w.trim()&&s.includes(w.trim())));return h?h.a:'Eta amar basic Q&A-r baire. Upor theke kono team member select kore chat korun.'};
+let stopS=null;const can=!!navigator.mediaDevices?.getDisplayMedia;
+const nm=()=>localStorage.snk_vn||(localStorage.snk_vn=prompt('Apnar naam?')||'Guest');
 function chat(){un();const L=[BOT,...T],m=L.find(x=>x.id==cur)||BOT;cur=m.id;const bot=m.id=='bot',sid=vid+'-'+m.id;
-$('#chat').innerHTML=`<h2>Chat</h2><div class="pick">${L.map(x=>`<button class="pk ${x.id==cur?'on':''}" data-p="${e(x.id)}">${e(x.name.split(' ')[0])}</button>`).join('')}</div><div class="card"><b>${e(m.name)}</b> <small>${bot?'Instant FAQ answers':(STATUS[m.status]||[''])[0]}</small><div class="msgs" id="ms"></div><div class="acts"><input id="mi" placeholder="Message likhun..."><button id="sd">Send</button></div></div>`;
+$('#chat').innerHTML=`<h2>Chat</h2><div class="pick">${L.map(x=>`<button class="pk ${x.id==cur?'on':''}" data-p="${e(x.id)}">${e(x.name.split(' ')[0])}</button>`).join('')}</div><div class="card"><b>${e(m.name)}</b> <small>${bot?'Instant FAQ answers':(STATUS[m.status]||[''])[0]}</small>
+${bot?'':`<details id="tk" style="margin-top:12px"><summary>🧾 Problem report korun (purchase / website)</summary><label>Kon website?<select id="tw">${SITES.map(s=>`<option>${e(s.title)} · ${e(s.link.replace('https://',''))}</option>`).join('')}</select></label><label>Ki problem?<select id="ti"><option>Purchase / payment korte parchi na</option><option>Website-e problem hoyeche</option><option>Onno kichu</option></select></label><label>Apnar phone / email<input id="tc"></label><label>Details<textarea id="td" rows="3"></textarea></label><button class="btn" id="tb">Pathan</button></details>`}
+<div class="m" id="rq" hidden style="max-width:100%;margin-top:12px">${can?'🖥 Amader team apnar screen dekhte chaiche. Allow korle apnar browser permission chaibe, apni jokhon khushi bondho korte paren.':'🖥 Team screen dekhte chaiche, kintu phone-er browser screen share support kore na. 📎 diye screenshot pathan.'}<span class="hb" style="margin-top:8px">${can&&live?'<button class="btn" id="ra">Allow</button>':''}<button class="btn g" id="rn">Thik ache</button></span></div>
+<div class="msgs" id="ms"></div><div class="acts"><input id="mi" placeholder="Message likhun..."><button id="at" ${bot?'hidden':''}>📎</button>${can&&live&&!bot?'<button id="sh">🖥 Share</button>':''}<button id="sd">Send</button></div><input type="file" id="af" accept="image/*" hidden></div>`;
 $$('[data-p]').forEach(b=>b.onclick=()=>{cur=b.dataset.p;chat()});
-const show=d=>{const x=$('#ms');if(!x)return;x.innerHTML=d.map(y=>`<div class="m ${y.from=='visitor'?'me':''}">${e(y.text)}</div>`).join('')||'<small>Prothom message likhun.</small>';x.scrollTop=1e9};
+const S2=async o=>{try{await send(sid,{member:m.name,mid:m.id,by:nm(),from:'visitor',...o})}catch(x){alert('Pathano gelo na.')}};
+const show=d=>{const x=$('#ms');if(!x)return;x.innerHTML=d.map(y=>`<div class="m ${y.from=='visitor'?'me':''}">${e(y.text)}${y.img?`<img src="${e(y.img)}" alt="">`:''}</div>`).join('')||'<small>Prothom message likhun.</small>';x.scrollTop=1e9;
+ const q=[...d].reverse().find(y=>y.kind=='req');if(q&&q.t>(+sessionStorage['rq'+sid]||0)){$('#rq').dataset.t=q.t;$('#rq').hidden=false}};
 if(bot)show(bm);else un=watch(sid,show);
-const go=async()=>{const i=$('#mi'),t=i.value.trim();if(!t)return;i.value='';if(bot){bm.push({from:'visitor',text:t},{from:'bot',text:ans(t)});return show(bm)}const n=localStorage.snk_vn||(localStorage.snk_vn=prompt('Apnar naam?')||'Guest');try{await send(sid,{member:m.name,mid:m.id,text:t,from:'visitor',by:n})}catch(x){alert('Message pathano gelo na.')}};
+const dis=()=>{sessionStorage['rq'+sid]=$('#rq').dataset.t||Date.now();$('#rq').hidden=true};
+const go2=async()=>{if(stopS){stopS();return}try{const n=nm();stopS=await share(sid,()=>{stopS=null;const b=$('#sh');if(b)b.textContent='🖥 Share'});const b=$('#sh');if(b)b.textContent='⏹ Stop';await S2({text:'🖥 Customer screen share shuru korechen',kind:'share',by:n})}catch(x){alert(x.name=='NotAllowedError'?'Screen share allow kora hoyni.':'Screen share shuru kora gelo na.')}};
+$('#rn').onclick=dis;if($('#ra'))$('#ra').onclick=()=>{dis();go2()};if($('#sh'))$('#sh').onclick=go2;
+$('#at').onclick=()=>$('#af').click();
+$('#af').onchange=async ev=>{const f=ev.target.files[0];if(f)await S2({text:'📷 Screenshot',img:await pic(f,800),kind:'img'})};
+if($('#tb'))$('#tb').onclick=async()=>{const d=$('#td').value.trim(),c=$('#tc').value.trim();if(!d||!c)return alert('Phone/email ar details likhun.');const w=$('#tw').value,i=$('#ti').value;await S2({text:`🧾 ${i}\n🌐 ${w}\n📞 ${c}\n${d}`,issue:i,site:w});$('#tk').open=false;$('#td').value=''};
+const go=async()=>{const i=$('#mi'),t=i.value.trim();if(!t)return;i.value='';if(bot){bm.push({from:'visitor',text:t},{from:'bot',text:ans(t)});return show(bm)}await S2({text:t})};
 $('#sd').onclick=go;$('#mi').onkeydown=x=>x.key=='Enter'&&go()}
 function route(){let h=(location.hash||'#home').slice(1);if(!['home','team','chat','show'].includes(h))h='home';$$('.pg').forEach(p=>p.classList.toggle('on',p.id==h));$$('nav a').forEach(a=>a.classList.toggle('on',a.hash=='#'+h));if(h=='chat')chat();else un();scrollTo(0,0)}
 addEventListener('hashchange',route);
